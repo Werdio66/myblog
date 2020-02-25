@@ -1,0 +1,116 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com._520.myblog.mapper.CommentMapper">
+
+    <resultMap type="com._520.myblog.entity.Comment" id="CommentMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="nickName" column="nickName" jdbcType="VARCHAR"/>
+        <result property="mail" column="mail" jdbcType="VARCHAR"/>
+        <result property="avatar" column="avatar" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="creatTime" column="creatTime" jdbcType="TIMESTAMP"/>
+        <result property="parentId" column="pid" jdbcType="TIMESTAMP"/>
+        <result property="blogId" column="blog_id" jdbcType="TIMESTAMP"/>
+
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="CommentMap">
+        select
+          id, nickName, mail, avatar, content, creatTime, pid, blog_id
+        from myblog.comment
+        where id = #{id}
+    </select>
+
+    <!-- 查询指定博客的评论 -->
+    <select id="queryAllByBlogId" resultMap="CommentMap">
+        select
+          id, nickName, mail, avatar, content, creatTime, pid, blog_id
+        from myblog.comment
+        where blog_id = #{id}
+        order by creatTime desc
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="CommentMap">
+        select
+          id, nickName, mail, avatar, content, creatTime, pid, blog_id
+        from myblog.comment
+        limit #{offset}, #{limit}
+    </select>
+
+    <select id="queryChird" resultMap="CommentMap">
+        select
+          id, nickName, mail, avatar, content, creatTime, pid, blog_id
+        from myblog.comment
+        where blog_id = #{blogId} and pid = #{pid}
+    </select>
+
+    <select id="queryParent" resultMap="CommentMap">
+        select
+          id, nickName, mail, avatar, content, creatTime, pid, blog_id
+        from myblog.comment
+        where blog_id = #{blogId} and pid = #{parentId}
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="CommentMap">
+        select
+          id, nickName, mail, avatar, content, creatTime, pid, blog_id
+        from myblog.comment
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="nickname != null and nickname != ''">
+                and nickName = #{nickName}
+            </if>
+            <if test="mail != null and mail != ''">
+                and mail = #{mail}
+            </if>
+            <if test="avatar != null and avatar != ''">
+                and avatar = #{avatar}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="creattime != null">
+                and creatTime = #{creatTime}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into myblog.comment(nickName, mail, avatar, content, creatTime, pid, blog_id)
+        values (#{nickName}, #{mail}, #{avatar}, #{content}, #{creatTime}, #{parentId}, #{blogId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update myblog.comment
+        <set>
+            <if test="nickname != null and nickname != ''">
+                nickName = #{nickname},
+            </if>
+            <if test="mail != null and mail != ''">
+                mail = #{mail},
+            </if>
+            <if test="avatar != null and avatar != ''">
+                avatar = #{avatar},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="creattime != null">
+                creatTime = #{creattime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from myblog.comment where id = #{id}
+    </delete>
+
+</mapper>

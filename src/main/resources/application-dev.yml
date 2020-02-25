@@ -1,0 +1,28 @@
+spring:
+  # 国际化
+  messages:
+    basename: i18n.login
+
+  # 数据库连接
+  datasource:
+    url: jdbc:mysql://localhost:3306/myblog?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    username: root
+    password: admin
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  devtools:
+    livereload:
+      # 开启热部署
+      enabled: true
+  thymeleaf:
+    # 不缓存，直接加载
+    cache: false
+mybatis:
+  # 配置 mapper 文件的目录
+  mapper-locations: classpath:mappers/*Mapper.xml
+
+logging:
+  file:
+    path: classpath:/log/myblog.log
+  level:
+    root : info
+    com._520.myblog : debug

@@ -1,0 +1,299 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{admin/_fragments :: head(~{::title})}">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>分类管理</title>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.css">
+  <link rel="stylesheet" href="/css/me.css">
+</head>
+<body>
+
+  <!--导航-->
+  <nav th:replace="~{admin/_fragments :: navbar(3)}" class="ui inverted attached segment m-padded-tb-mini m-shadow-small" >
+    <div class="ui container">
+      <div class="ui inverted secondary stackable menu">
+        <h2 class="ui teal header item">管理后台</h2>
+        <a href="#" class="active m-item item m-mobile-hide"><i class="mini home icon"></i>博客</a>
+        <a href="#" class=" m-item item m-mobile-hide"><i class="mini idea icon"></i>分类</a>
+        <a href="#" class="m-item item m-mobile-hide"><i class="mini tags icon"></i>标签</a>
+        <div class="right m-item m-mobile-hide menu">
+          <div class="ui dropdown  item">
+            <div class="text">
+              <img class="ui avatar image" src="https://unsplash.it/100/100?image=1005">
+              李仁密
+            </div>
+            <i class="dropdown icon"></i>
+            <div class="menu">
+              <a href="#" class="item">注销</a>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <a href="#" class="ui menu toggle black icon button m-right-top m-mobile-show">
+      <i class="sidebar icon"></i>
+    </a>
+  </nav>
+
+  <!--中间内容-->
+  <div  class="m-container-small m-padded-tb-big">
+    <div class="ui container">
+
+      <table class="ui celled table">
+
+        <tr><h2>标签列表</h2></tr>
+
+        <tr>
+          <a id="addTag" href="#" class="ui left floated teal basic button">新增</a>
+          <a id="deleteBanch" href="#" class="ui left floated red basic button">删除</a>
+          <br>
+        </tr>
+
+        <tr>
+          <td>#</td>
+          <td><input id="selectAll" type="checkbox"></td>
+          <td><h3>标签名称</h3></td>
+          <td><h3>操作</h3></td>
+        </tr>
+
+        <tbody>
+          <tr th:each="tag, iterStat : ${pageInfo.list}">
+            <td th:text="${iterStat.count}">1</td>
+            <td><input type="checkbox"></td>
+            <td th:text="${tag.name}">刻意练习清单</td>
+            <td>
+              <a th:tagId="${tag.id}" href="#" class="updateTag ui mini teal basic button">编辑</a>
+              <a th:tagId="${tag.id}" href="#" class="deleteTag ui mini red basic button">删除</a>
+            </td>
+          </tr>
+        </tbody>
+        <tfoot>
+          <tr>
+            <th colspan="6">
+              <div class="ui mini pagination menu">
+                <a th:href="@{${pageInfo.isFirstPage ? '#' : '/admin/tag/index?pageNum=' + pageInfo.getPrePage()}}" class=" item" >上一页</a>
+                <a th:href="@{${pageInfo.isLastPage ? '#' : '/admin/tag/index?pageNum=' + pageInfo.getNextPage()}}" class=" item">下一页</a>
+              </div>
+            </th>
+          </tr>
+        </tfoot>
+      </table>
+    </div>
+  </div>
+
+
+  <!-- 新增模态框 -->
+  <div id="addModal" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      新增标签
+    </div>
+    <form id="addForm" action="#" method="post" class="ui form">
+      <div class="field">
+        <div class="ui left labeled input">
+          <label class="ui teal basic label">请输入标签名称</label>
+          <input type="text" name="name" size="60px" placeholder="标签名称">
+        </div>
+      </div>
+    </form>
+    <div class="actions">
+      <button onclick="$('#addModal').modal('hide')" class="ui button">返回</button>
+      <button id="addBtn" class="ui primary button">保存</button>
+    </div>
+  </div>
+
+
+  <!-- 修改模态框 -->
+  <div id="updateModal" class="ui modal">
+    <i class="close icon"></i>
+    <div class="header">
+      修改标签
+    </div>
+    <form id="updateForm" action="#" method="post" class="ui form">
+      <div class="field">
+        <div class="ui left labeled input">
+          <label class="ui teal basic label">请输入修改后的名称</label>
+          <input id="updateName" type="text" name="name" size="60px" placeholder="标签名称">
+        </div>
+      </div>
+    </form>
+    <div class="actions">
+      <button onclick="$('#updateModal').modal('hide')" class="ui button">返回</button>
+      <button id="updateBtn" class="ui primary button">保存</button>
+    </div>
+  </div>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <br>
+  <!--底部footer-->
+  <footer th:replace="~{admin/_fragments :: footer}" class="ui inverted vertical segment m-padded-tb-massive">
+    <div class="ui center aligned container">
+      <div class="ui inverted divided stackable grid">
+        <div class="three wide column">
+          <div class="ui inverted link list">
+            <div class="item">
+              <img src="../../static/images/wechat.jpg" class="ui rounded image" alt="" style="width: 110px">
+            </div>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced " >最新博客</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+            <a href="#" class="item m-text-thin">用户故事（User Story）</a>
+          </div>
+        </div>
+        <div class="three wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">联系我</h4>
+          <div class="ui inverted link list">
+            <a href="#" class="item m-text-thin">Email：lirenmi@163.com</a>
+            <a href="#" class="item m-text-thin">QQ：865729312</a>
+          </div>
+        </div>
+        <div class="seven wide column">
+          <h4 class="ui inverted header m-text-thin m-text-spaced ">Blog</h4>
+          <p class="m-text-thin m-text-spaced m-opacity-mini">这是我的个人博客、会分享关于编程、写作、思考相关的任何内容，希望可以给来到这儿的人有所帮助...</p>
+        </div>
+      </div>
+      <div class="ui inverted section divider"></div>
+      <p class="m-text-thin m-text-spaced m-opacity-tiny">Copyright © 2016 - 2017 Lirenmi Designed by Lirenmi</p>
+    </div>
+
+  </footer>
+
+<script src="https://cdn.jsdelivr.net/npm/jquery@3.2/dist/jquery.min.js"></script>
+<script src="https://cdn.jsdelivr.net/semantic-ui/2.2.4/semantic.min.js"></script>
+<!--<script src="/jquery/jquery-2.1.1.min.js"></script>-->
+<script src="/jquery/layer/layer.js"></script>
+
+  <script>
+    $('.menu.toggle').click(function () {
+      $('.m-item').toggleClass('m-mobile-hide');
+    });
+
+    $('.ui.dropdown').dropdown({
+      on : 'hover'
+    });
+
+
+    // 弹出新增模态框
+    $("#addTag").click(function () {
+      $('#addModal').modal('show');
+    });
+
+    function closeModal(){
+      $("#addModal").modal("hide");
+    }
+
+    // 点击保存按钮
+    $("#addBtn").click(function () {
+      var name = $("#addForm input[name='name']").val();
+      console.log("name = ", name);
+        $.ajax({
+          type : 'post',
+          url : '/admin/tag/add',
+          data : {name : name},
+          beforeSend : function(){
+            if (name == null || '' === name){
+              layer.msg("请输入名称！");
+              return false;
+            }else {
+              return true;
+            }
+            // return (name == null || '' === name);
+          },
+          success : function (result) {
+
+            var msg = result.message;
+            console.log('后台返回的数据 ：' + msg);
+              if ('ok' === msg){
+                closeModal();
+                layer.msg("保存成功！", {time : 1000});
+                location.href = '/admin/tag/index'
+              }else {
+                closeModal();
+                layer.msg("保存失败！" + msg, {time : 1000});
+              }
+          }
+        });
+    });
+
+    // 修改分类名称
+
+    var oldName;
+    var updateId;
+    $(".updateTag").click(function () {
+      var id = $(this).attr('tagId');
+      updateId = id;
+      console.log('修改分类的 id = ', id);
+      $.ajax({
+        type : 'get',
+        url : '/admin/tag/selectById',
+        data : {id : id},
+        success : function (result) {
+          var msg = result.message;
+          var name = result.data.name;
+          console.log("查询修改状态 = ", msg);
+          console.log("修改前的名称 = ", name);
+          oldName = name;
+          if (msg === 'ok'){
+            $("#updateName").prop('value', name);
+            $('#updateModal').modal('show');
+          }
+        }
+      });
+    });
+
+
+    $("#updateBtn").click(function () {
+      var newName = $("#updateName").val();
+      console.log('新的分类值 = ', newName);
+
+      $.ajax({
+        type : 'post',
+        url : '/admin/tag/update',
+        data : {
+          id : updateId,
+          name : newName
+        },
+        beforeSend : function () {
+          if (oldName === newName){
+            layer.msg('请确认是否已经修改分类名称！');
+            return false;
+          }else {
+            return true;
+          }
+        },
+        success : function (result) {
+          var msg = result.message;
+          if (msg === 'ok'){
+            $('#updateModal').modal('hide');
+            layer.msg("修改成功", {time : 1000});
+            location.href = '/admin/tag/index';
+          }else {
+            layer.msg("修改失败");
+          }
+        }
+      });
+    });
+
+
+
+
+
+
+
+
+    // 选中所以的复选框
+    $("#selectAll").click(function () {
+        $("tbody input[type = 'checkbox']").prop('checked', this.checked);
+    });
+
+  </script>
+</body>
+</html>

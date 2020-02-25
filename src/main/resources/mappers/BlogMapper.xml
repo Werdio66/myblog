@@ -1,0 +1,202 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com._520.myblog.mapper.BlogMapper">
+
+    <resultMap type="com._520.myblog.entity.Blog" id="BlogMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="title" column="title" jdbcType="VARCHAR"/>
+        <result property="content" column="content" jdbcType="VARCHAR"/>
+        <result property="firstPicture" column="firstPicture" jdbcType="VARCHAR"/>
+        <result property="flag" column="flag" jdbcType="VARCHAR"/>
+        <result property="viewsCount" column="viewsCount" jdbcType="INTEGER"/>
+        <result property="appreciation" column="appreciation" jdbcType="INTEGER"/>
+        <result property="shareStatement" column="shareStatement" jdbcType="INTEGER"/>
+        <result property="published" column="published" jdbcType="INTEGER"/>
+        <result property="recomend" column="recomend" jdbcType="INTEGER"/>
+        <result property="creatTime" column="creatTime" jdbcType="TIMESTAMP"/>
+        <result property="updateTime" column="updateTime" jdbcType="TIMESTAMP"/>
+        <result property="commentabled" column="commentabled" jdbcType="INTEGER"/>
+        <result property="description" column="description" jdbcType="VARCHAR"/>
+
+        <collection property="type" ofType="com._520.myblog.entity.Type">
+            <id property="id" column="t_id"/>
+            <result property="name" column="t_name"/>
+        </collection>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="queryById" resultMap="BlogMap">
+        select
+          blog.id, type.id t_id, type.name t_name, title, content, description, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog join type
+        on blog.type_id = type.id
+        where blog.id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="BlogMap">
+        select
+          blog.id, type.id t_id, type.name t_name, title, content, description, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog join type
+        on blog.type_id = type.id
+        limit #{offset}, #{limit}
+    </select>
+
+    <!-- 查询对应分类的所有博客 -->
+    <select id="selectByTypeId" resultMap="BlogMap">
+      select
+          blog.id, type.id t_id, type.name t_name, title, content, description, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog join type
+        on blog.type_id = type.id
+        where type_id = #{id}
+    </select>
+
+    <!-- 查询对应标签的所有博客 -->
+    <select id="selectByTagId" resultMap="BlogMap">
+        select
+        blog.id, title, type.id t_id, type.name t_name, description, content, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog join blog_tag join type
+        on blog.id = blog_tag.blog_id
+        where blog_tag.tag_id = #{id} and type.id = blog.type_id
+    </select>
+
+    <!-- 按时间排序 -->
+    <select id="queryAllSortByTime" resultMap="BlogMap">
+        select
+        id, title, description, content, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog
+        <where>
+            <if test="commentabled == true">
+                and commentabled = #{commentabled}
+            </if>
+        </where>
+        order by updateTime desc
+        limit #{offset}, #{limit}
+    </select>
+    <select id="queryAllByCondition" resultMap="BlogMap">
+        select
+        blog.id, type.id t_id, type.name t_name, title, description, content, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog join type
+        on blog.type_id = type.id
+        <where>
+
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="typeId != null">
+                and type_id = #{typeId}
+            </if>
+            <if test="recommend">
+                and commentabled = 1
+            </if>
+        </where>
+    </select>
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="BlogMap">
+        select
+        blog.id, type.id t_id, type.name t_name, title, description, content, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog join type
+        on blog.type_id = type.id
+        <where>
+
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="title != null and title != ''">
+                and title = #{title}
+            </if>
+            <if test="content != null and content != ''">
+                and content = #{content}
+            </if>
+            <if test="firstPicture != null and firstPicture != ''">
+                and firstPicture = #{firstPicture}
+            </if>
+            <if test="flag != null and flag != ''">
+                and flag = #{flag}
+            </if>
+            <if test="viewsCount != null">
+                and viewsCount = #{viewsCount}
+            </if>
+            <if test="appreciation != null">
+                and appreciation = #{appreciation}
+            </if>
+            <if test="shareStatement != null">
+                and shareStatement = #{shareStatement}
+            </if>
+            <if test="published != null">
+                and published = #{published}
+            </if>
+            <if test="recomend != null">
+                and recomend = #{recomend}
+            </if>
+
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="true">
+        insert into myblog.blog(title, content, description, firstPicture, flag, viewsCount, appreciation, shareStatement, published, recomend, creatTime, updateTime, type_id, commentabled)
+        values (#{title}, #{content}, #{firstPicture}, #{description}, #{flag}, #{viewsCount}, #{appreciation}, #{shareStatement}, #{published}, #{recomend}, #{creatTime}, #{updateTime}, #{typeId}, #{commentabled})
+    </insert>
+
+    <select id="getIdByTitle" resultType="Long">
+        select id from blog where title = #{title}
+    </select>
+
+    <insert id="protectBlogAndTags">
+        insert into blog_tag(blog_id, tag_id) values (#{blogId}, #{tagId})
+    </insert>
+
+    <delete id="deleteBlogAndTagsById">
+        delete from blog_tag where blog_id = #{id}
+    </delete>
+    <!--通过主键修改数据-->
+    <update id="update">
+        update myblog.blog
+        <set>
+            <if test="title != null and title != ''">
+                title = #{title},
+            </if>
+            <if test="description != null and description !=''">
+                and description = #{description},
+            </if>
+            <if test="content != null and content != ''">
+                content = #{content},
+            </if>
+            <if test="firstPicture != null and firstPicture != ''">
+                firstPicture = #{firstPicture},
+            </if>
+            <if test="flag != null and flag != ''">
+                flag = #{flag},
+            </if>
+            <if test="viewsCount != null">
+                viewsCount = #{viewsCount},
+            </if>
+            <if test="appreciation != null">
+                appreciation = #{appreciation},
+            </if>
+            <if test="shareStatement != null">
+                shareStatement = #{shareStatement},
+            </if>
+            <if test="published != null">
+                published = #{published},
+            </if>
+            <if test="recomend != null">
+                recomend = #{recomend},
+            </if>
+            <if test="creatTime != null">
+                creatTime = #{creatTime},
+            </if>
+            <if test="updateTime != null">
+                updateTime = #{updateTime},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from myblog.blog where id = #{id}
+    </delete>
+
+</mapper>

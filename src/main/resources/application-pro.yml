@@ -1,0 +1,21 @@
+spring:
+  # 国际化
+  messages:
+    basename: i18n.login
+
+  # 数据库连接
+  datasource:
+    url: jdbc:mysql://192.168.47.66:3306/myblog?useSSL=false&useUnicode=true&characterEncoding=UTF-8
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.jdbc.Driver
+mybatis:
+  # 配置 mapper 文件的目录
+  mapper-locations: classpath:mappers/*Mapper.xml
+
+logging:
+  file:
+    path: classpath:/log/myblog.log
+  level:
+    root : debug
+    myblog : debug
