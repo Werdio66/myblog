@@ -21,8 +21,8 @@ mybatis:
   mapper-locations: classpath:mappers/*Mapper.xml
 
 logging:
-  file:
-    path: classpath:/log/myblog.log
   level:
     root : info
     com._520.myblog : debug
+  file:
+    name: log/myblog.log
