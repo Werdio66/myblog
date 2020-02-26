@@ -1,9 +1,11 @@
 package com._520.myblog.config;
 
+import com._520.myblog.component.MyLoginInterceptor;
 import com._520.myblog.component.MylocaleResolver;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.servlet.LocaleResolver;
+import org.springframework.web.servlet.config.annotation.InterceptorRegistry;
 import org.springframework.web.servlet.config.annotation.ViewControllerRegistry;
 import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 
@@ -27,5 +29,13 @@ public class MyWebMvcConfig implements WebMvcConfigurer {
     @Bean
     public LocaleResolver localeResolver(){
         return new MylocaleResolver();
+    }
+
+    // 增加拦截器
+    @Override
+    public void addInterceptors(InterceptorRegistry registry) {
+        if (registry != null) {
+            registry.addInterceptor(new MyLoginInterceptor());
+        }
     }
 }
