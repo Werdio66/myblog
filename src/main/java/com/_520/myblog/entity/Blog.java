@@ -56,4 +56,28 @@ public class Blog {
     private User user;
 
     private Long typeId;
+
+    @Override
+    public String toString() {
+        return "Blog{" +
+                "id=" + id +
+                ", title='" + title + '\'' +
+                ", firstPicture='" + firstPicture + '\'' +
+                ", flag='" + flag + '\'' +
+                ", viewsCount=" + viewsCount +
+                ", appreciation=" + appreciation +
+                ", commentabled=" + commentabled +
+                ", shareStatement=" + shareStatement +
+                ", published=" + published +
+                ", recomend=" + recomend +
+                ", creatTime=" + creatTime +
+                ", updateTime=" + updateTime +
+                ", description='" + description + '\'' +
+                ", type=" + type +
+                ", tags=" + tags +
+                ", comments=" + comments +
+                ", user=" + user +
+                ", typeId=" + typeId +
+                '}';
+    }
 }

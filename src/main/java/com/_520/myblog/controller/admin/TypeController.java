@@ -3,6 +3,7 @@ package com._520.myblog.controller.admin;
 import com._520.myblog.entity.Type;
 import com._520.myblog.po.BaseResponse;
 import com._520.myblog.service.TypeService;
+import com._520.myblog.utils.StringUtil;
 import com.github.pagehelper.PageHelper;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
@@ -67,6 +68,25 @@ public class TypeController {
     public BaseResponse<?> update(Type type){
         log.info("修改分类名称：");
         typeService.update(type);
+        return BaseResponse.ok("ok");
+    }
+
+    @ResponseBody
+    @GetMapping("/delete")
+    public BaseResponse<?> delete(Long id){
+        log.info("删除分类：id = {}", id);
+
+        typeService.deleteById(id);
+
+        return BaseResponse.ok("ok");
+    }
+
+    @ResponseBody
+    @GetMapping("/deleteBanch")
+    public BaseResponse<?> deleteBanch(String ids){
+        log.info("批量删除分类：ids = {}", ids);
+
+        typeService.deleteBanch(StringUtil.str2Long(ids));
         return BaseResponse.ok("ok");
     }
 }

@@ -6,6 +6,7 @@ import com._520.myblog.po.Condition;
 import com._520.myblog.service.BlogService;
 import com._520.myblog.utils.MarkdownUtils;
 import com.github.pagehelper.PageInfo;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -17,7 +18,8 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.time.format.DateTimeFormatter;
-import java.util.List;
+import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 /**
  * (Blog)表服务实现类
@@ -25,7 +27,7 @@ import java.util.List;
  * @author Werdio丶
  * @since 2020-02-15 12:24:43
  */
-@Transactional
+@Slf4j
 @Service("blogService")
 public class BlogServiceImpl implements BlogService {
     @Resource
@@ -42,6 +44,7 @@ public class BlogServiceImpl implements BlogService {
         return this.blogMapper.queryById(id);
     }
 
+    @Transactional
     @ReadOnlyProperty
     @Override
     public Blog queryById2HTML(Long id) {
@@ -49,6 +52,11 @@ public class BlogServiceImpl implements BlogService {
         // 将文本内容转换为前端页面显示
         String content = MarkdownUtils.markdownToHtmlExtensions(blog.getContent());
         blog.setContent(content);
+        Integer viewsCount = blog.getViewsCount();
+        AtomicInteger atomicInteger = new AtomicInteger(viewsCount);
+        blog.setViewsCount(atomicInteger.incrementAndGet());
+
+        blogMapper.update(blog);
 
         return blog;
     }
@@ -82,6 +90,7 @@ public class BlogServiceImpl implements BlogService {
      * @param blog 实例对象
      * @return 实例对象
      */
+    @Transactional
     @Override
     public Blog insert(Blog blog, Long[] tagIds) {
         blog.setViewsCount(0);
@@ -107,6 +116,7 @@ public class BlogServiceImpl implements BlogService {
      * @param blog 实例对象
      * @return 实例对象
      */
+    @Transactional
     @Override
     public Blog update(Blog blog, Long[] tagIds) {
 
@@ -168,4 +178,20 @@ public class BlogServiceImpl implements BlogService {
         return new PageInfo<>(blogs);
     }
 
+    public Map<String, List<Blog>> queryByArchive(){
+        List<String> yearList = blogMapper.queryYear();
+        Map<String, List<Blog>> blogMap = new LinkedHashMap<>();
+        log.info("yearList = {}", yearList);
+        for (String year : yearList) {
+            List<Blog> blogList = blogMapper.queryByYear(year);
+            log.info("blogList = {}", blogList);
+            blogMap.put(year, blogList);
+        }
+        return blogMap;
+    }
+
+    @Override
+    public int queryCount() {
+        return blogMapper.queryCount();
+    }
 }

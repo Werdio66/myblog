@@ -69,4 +69,10 @@ public interface TypeService {
     boolean deleteById(Long id);
 
     PageInfo<Type> listTypePage();
+
+    /**
+     *  批量删除
+     * @param str2Long
+     */
+    void deleteBanch(List<Long> str2Long);
 }

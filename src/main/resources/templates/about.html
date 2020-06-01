@@ -47,23 +47,13 @@
             <div class="ui header">关于我</div>
           </div>
           <div class="ui attached segment">
-            <p class="m-text">李仁密，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>
-            <p class="m-text">热爱编程，喜欢折腾，正在探索高效学习编程技术的方法...</p>
+            <p class="m-text" th:text="${user.content}">李仁密，一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.</p>
           </div>
           <div class="ui attached segment">
-            <div class="ui orange basic left pointing label">编程</div>
-            <div class="ui orange basic left pointing label">写作</div>
-            <div class="ui orange basic left pointing label">思考</div>
-            <div class="ui orange basic left pointing label">运动</div>
+            <div th:each="tag : ${user.tagList}" th:text="${tag}" class="ui orange basic left pointing label">编程</div>
           </div>
           <div class="ui attached segment">
-            <div class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
-            <div class="ui teal basic left pointing label m-margin-tb-tiny">JavaScript</div>
-            <div class="ui teal basic left pointing label m-margin-tb-tiny">Node</div>
-            <div class="ui teal basic left pointing label m-margin-tb-tiny">React</div>
-            <div class="ui teal basic left pointing label m-margin-tb-tiny">RN</div>
-            <div class="ui teal basic left pointing label m-margin-tb-tiny">MYSQL</div>
-            <div class="ui teal basic left pointing label m-margin-tb-tiny">...</div>
+            <div th:each="str : ${user.languageList}" th:text="${str}" class="ui teal basic left pointing label m-margin-tb-tiny">Java</div>
           </div>
           <div class="ui bottom attached segment">
             <a href="#" class="ui circular icon button"><i class="github icon"></i></a>

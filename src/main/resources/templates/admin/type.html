@@ -60,7 +60,7 @@
         <tbody>
           <tr th:each="type, iterStat : ${pageInfo.list}">
             <td th:text="${iterStat.count}">1</td>
-            <td><input type="checkbox"></td>
+            <td><input type="checkbox" th:typeId="${type.id}"></td>
             <td th:text="${type.name}">刻意练习清单</td>
             <td>
               <a th:typeId="${type.id}" href="#" class="updateType ui mini teal basic button">编辑</a>
@@ -183,11 +183,11 @@
 
     // 弹出新增模态框
     $("#addType").click(function () {
-      $('.ui.modal').modal('show');
+      $('#addModal').modal('show');
     });
 
     function closeModal(){
-      $("#addModal").modal("hide");
+      $(".ui.modal").modal("hide");
     }
 
     // 点击保存按钮
@@ -283,16 +283,76 @@
     });
 
 
+  $('.deleteType').click(function () {
+    var id = $(this).attr('typeId');
+    console.log("删除的 id = ", id);
+    $.ajax({
+      method : 'get',
+      url : '/admin/type/delete',
+      data : {id : id},
+      success : function (ret) {
+        if ('ok' == ret.message){
+          console.log("删除成功");
+          layer.msg('删除成功', {time : 1000});
+          location.href = '/admin/type/index';
+        }else {
+          layer.msg('删除失败', {time : 1000});
+        }
+      }
+    })
 
 
 
 
-
+  });
 
     // 选中所以的复选框
     $("#selectAll").click(function () {
-        $("tbody input[type = 'checkbox']").prop('checked', this.checked);
+      $("tbody input[type = 'checkbox']").prop('checked', this.checked);
     });
+
+
+    $("#deleteBanch").click(function () {
+      console.log("批量删除分类：");
+      var checkboxList = $("tbody input[type = 'checkbox']:checked");
+      console.log("选中的分类：", checkboxList);
+
+      // 没有选择删除对象
+      if (checkboxList.length === 0) {
+        layer.msg("请选择要删除的用户！", [btn = 5], 1000);
+        return false;
+      }
+
+      var ids = '';
+      var array = [];
+      // 对集合进行遍历
+      $.each(checkboxList, function (i, e) {
+        // 得到每一个选中的box绑定的 id
+        var typeId = $(e).attr("typeId");
+        console.log("typeId = ,", typeId);
+        array.push(typeId);
+      });
+      ids = array.join(",");
+      console.log("ids = ", ids);
+
+      $.ajax({
+        method : 'get',
+        url : '/admin/type/deleteBanch',
+        data : {ids : ids},
+        success : function (ret) {
+          if ('ok' == ret.message){
+            console.log("删除成功");
+            layer.msg('删除成功', {time : 1000});
+            location.href = '/admin/type/index';
+          }else {
+            layer.msg('删除失败', {time : 1000});
+          }
+        }
+      })
+    });
+
+
+
 
   </script>
 </body>

@@ -59,7 +59,25 @@
         on blog.id = blog_tag.blog_id
         where blog_tag.tag_id = #{id} and type.id = blog.type_id
     </select>
-
+    <!-- 查询博客中的年份 -->
+    <select id="queryYear" resultType="string">
+        select date_format(blog.updateTime, '%Y') as year
+        from blog
+        group by year
+        order by year desc
+    </select>
+    <!-- 查询博客总数 -->
+    <select id="queryCount" resultType="int">
+        select count(id) from blog
+    </select>
+    <!-- 按年份查询博客 -->
+    <select id="queryByYear" resultMap="BlogMap">
+         select
+          blog.id, type.id t_id, type.name t_name, title, content, description, firstPicture, flag, viewsCount, appreciation, commentabled, shareStatement, published, recomend, creatTime, updateTime
+        from myblog.blog join type
+        on blog.type_id = type.id
+        where date_format(blog.updateTime, '%Y') = #{year}
+    </select>
     <!-- 按时间排序 -->
     <select id="queryAllSortByTime" resultMap="BlogMap">
         select
@@ -152,13 +170,14 @@
     </delete>
     <!--通过主键修改数据-->
     <update id="update">
+
         update myblog.blog
         <set>
             <if test="title != null and title != ''">
                 title = #{title},
             </if>
             <if test="description != null and description !=''">
-                and description = #{description},
+                description = #{description},
             </if>
             <if test="content != null and content != ''">
                 content = #{content},
@@ -174,6 +193,9 @@
             </if>
             <if test="appreciation != null">
                 appreciation = #{appreciation},
+            </if>
+            <if test="commentabled != null">
+                commentabled = #{commentabled},
             </if>
             <if test="shareStatement != null">
                 shareStatement = #{shareStatement},

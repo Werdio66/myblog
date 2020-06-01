@@ -65,4 +65,10 @@
         delete from myblog.type where id = #{id}
     </delete>
 
+    <delete id="deleteBanch">
+        delete from myblog.type where id in
+        <foreach collection="idList" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </delete>
 </mapper>

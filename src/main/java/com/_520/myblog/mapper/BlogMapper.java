@@ -72,13 +72,19 @@ public interface BlogMapper {
 
     Long getIdByTitle(String title);
 
-    void protectBlogAndTags(Long blogId, Long tagId);
+    void protectBlogAndTags(@Param("blogId") Long blogId, @Param("tagId") Long tagId);
 
     void deleteBlogAndTagsById(Long id);
 
-    List<Blog> queryAllSortByTime(int offset, int limit, boolean commentabled);
+    List<Blog> queryAllSortByTime(@Param("offset") int offset, @Param("limit")int limit, @Param("commentabled")boolean commentabled);
 
     List<Blog> selectByTypeId(Long id);
 
     List<Blog> selectByTagId(Long id);
+
+    List<String> queryYear();
+
+    List<Blog> queryByYear(@Param("year") String year);
+
+    int queryCount();
 }

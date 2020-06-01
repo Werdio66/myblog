@@ -1,10 +1,16 @@
 package com._520.myblog.service.impl;
 
+import com._520.myblog.entity.Blog;
 import com._520.myblog.entity.Type;
+import com._520.myblog.exception.CanNotDeleteException;
+import com._520.myblog.exception.MyBlogException;
+import com._520.myblog.mapper.BlogMapper;
 import com._520.myblog.mapper.TypeMapper;
+import com._520.myblog.service.BlogService;
 import com._520.myblog.service.TypeService;
 import com.github.pagehelper.PageInfo;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import javax.annotation.Resource;
 import java.util.Collections;
@@ -21,6 +27,8 @@ public class TypeServiceImpl implements TypeService {
     @Resource
     private TypeMapper typeMapper;
 
+    @Resource
+    private BlogMapper blogMapper;
     /**
      * 通过ID查询单条数据
      *
@@ -108,8 +116,25 @@ public class TypeServiceImpl implements TypeService {
      * @param id 主键
      * @return 是否成功
      */
+    @Transactional
     @Override
     public boolean deleteById(Long id) {
+        if (1L == id){
+            throw new CanNotDeleteException("默认分类不能删除");
+        }
+
+        // 删除其他分类时，要将当前分类的所有博客设置为默认分类
+        List<Blog> blogList = blogMapper.selectByTypeId(id);
+
+        // 当前分类下有博客
+        if (blogList != null){
+            for (Blog blog : blogList) {
+                blog.setTypeId(1L);
+                blogMapper.update(blog);
+            }
+        }
+
+
         return this.typeMapper.deleteById(id) > 0;
     }
 
@@ -117,5 +142,32 @@ public class TypeServiceImpl implements TypeService {
     public PageInfo<Type> listTypePage() {
         List<Type> types = typeMapper.queryAll(null);
         return new PageInfo<>(types);
+    }
+
+    @Transactional
+    @Override
+    public void deleteBanch(List<Long> idList) {
+        if (idList.contains(1L)){
+            throw new CanNotDeleteException("默认分类不能删除");
+        }
+
+        if (idList.size() == 0){
+            throw new CanNotDeleteException("请选择要删除的分类");
+        }
+
+        for (Long id : idList) {
+            // 删除其他分类时，要将当前分类的所有博客设置为默认分类
+            List<Blog> blogList = blogMapper.selectByTypeId(id);
+            // 当前分类下有博客
+            if (blogList != null){
+                for (Blog blog : blogList) {
+                    blog.setTypeId(1L);
+                    blogMapper.update(blog);
+                }
+            }
+
+        }
+        // 删除分类
+        typeMapper.deleteBanch(idList);
     }
 }

@@ -62,4 +62,9 @@ public interface TypeMapper {
      */
     int deleteById(Long id);
 
+    /**
+     * 批量删除
+     * @param idList
+     */
+    void deleteBanch(@Param("idList") List<Long> idList);
 }

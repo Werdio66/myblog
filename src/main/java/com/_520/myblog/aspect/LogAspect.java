@@ -10,6 +10,7 @@ import org.springframework.web.context.request.RequestContextHolder;
 import org.springframework.web.context.request.ServletRequestAttributes;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.Arrays;
 import java.util.Objects;
 
 @Slf4j
@@ -40,11 +41,20 @@ public class LogAspect {
 
 
     @AllArgsConstructor
-    @ToString
     private static class RequestLog{
         private final String url;
         private final String ip;
         private final String reqMethod;
         private final Object[] args;
+
+        @Override
+        public String toString() {
+            return "RequestLog{" +
+                    "url='" + url + '\'' +
+                    ", ip='" + ip + '\'' +
+                    ", reqMethod='" + reqMethod + '\'' +
+                    ", args=" + Arrays.toString(args) +
+                    '}';
+        }
     }
 }

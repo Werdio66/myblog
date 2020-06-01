@@ -9,13 +9,16 @@ spring:
     username: root
     password: 123456
     driver-class-name: com.mysql.jdbc.Driver
+
 mybatis:
   # 配置 mapper 文件的目录
   mapper-locations: classpath:mappers/*Mapper.xml
 
 logging:
   file:
-    path: classpath:/log/myblog.log
+    name : log/myblog.log
   level:
     root : debug
-    myblog : debug
+    com._520.myblog : debug
+server:
+  port: 8081

@@ -5,6 +5,7 @@ import com._520.myblog.po.Condition;
 import com.github.pagehelper.PageInfo;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * (Blog)表服务接口
@@ -87,4 +88,15 @@ public interface BlogService {
      *  查询指定标签的博客
      */
     PageInfo<Blog> selectByTagId(Long id);
+
+    /**
+     *  按时间查询博客
+     * @return      key  年份    value  这一年的所有博客
+     */
+    Map<String, List<Blog>> queryByArchive();
+
+    /**
+     *  查询博客数量
+     */
+    int queryCount();
 }

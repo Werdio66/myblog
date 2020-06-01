@@ -67,10 +67,10 @@ public interface CommentMapper {
     /**
      *  查询父评论
      */
-    Comment queryParent(Long blogId, Long parentId);
+    Comment queryParent(@Param("blogId") Long blogId, @Param("parentId") Long parentId);
 
     /**
      *  查询子评论
      */
-    List<Comment> queryChird(Long blogId, Long pid);
+    List<Comment> queryChird(@Param("blogId") Long blogId, @Param("pid") Long pid);
 }

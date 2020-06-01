@@ -59,18 +59,14 @@ public class TagServiceImpl implements TagService {
     @Override
     public List<Tag> queryAllSortByBlogSize(int offset, int limit) {
         List<Tag> tags = queryAllByLimit(offset, limit);
-        tags.sort(((o1, o2) -> {
-            return o2.getBlogs().size() - o1.getBlogs().size();
-        }));
+        tags.sort(((o1, o2) -> o2.getBlogs().size() - o1.getBlogs().size()));
         return tags;
     }
 
     @Override
     public List<Tag> queryAllSortByBlogSize() {
         List<Tag> tags = queryAll(null);
-        tags.sort(((o1, o2) -> {
-            return o2.getBlogs().size() - o1.getBlogs().size();
-        }));
+        tags.sort(((o1, o2) -> o2.getBlogs().size() - o1.getBlogs().size()));
         return tags;
     }
 
