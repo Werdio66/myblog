@@ -3,6 +3,7 @@ package com._520.myblog.controller;
 import com._520.myblog.entity.Blog;
 import com._520.myblog.entity.Tag;
 import com._520.myblog.entity.Type;
+import com._520.myblog.redis.BlogCache;
 import com._520.myblog.service.BlogService;
 import com._520.myblog.service.TagService;
 import com._520.myblog.service.TypeService;
@@ -17,6 +18,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import java.util.List;
+import java.util.Set;
 
 @Slf4j
 @Controller
@@ -31,11 +33,14 @@ public class IndexController {
     @Autowired
     private TagService tagService;
 
+    @Autowired
+    private BlogCache blogCache;
+
 
     /**
      *  跳转到前端页面
      */
-    @GetMapping("/index")
+    @GetMapping("/")
     public String index(@RequestParam(value = "pageNum", required = false, defaultValue = "1")Integer pageNum,
                         @RequestParam(value = "pageSize", required = false, defaultValue = "6")Integer pageSize,
                         Model model){
@@ -56,7 +61,9 @@ public class IndexController {
         log.info("查询的标签：{}", tags);
 
         // 查询最新推荐的博客
-        List<Blog> blogs = blogService.selectRecommend(1, 6);
+        Set<Long> ids = blogCache.zsetGetBlog( 6);
+
+        List<Blog> blogs = blogService.selectByIds(ids);
         log.info("推荐的博客：{}", blogs);
 
         model.addAttribute("pageInfo", pageInfo);
@@ -77,7 +84,8 @@ public class IndexController {
 
         PageHelper.startPage(pageNum, pageSize);
         PageInfo<Blog> pageInfo = blogService.listBlogPage(null);
-
+        log.info("上一页：" + pageInfo.getPrePage());
+        log.info("下一页：" + pageInfo.getNextPage());
         model.addAttribute("pageInfo", pageInfo);
         return "index :: blog_content";
     }

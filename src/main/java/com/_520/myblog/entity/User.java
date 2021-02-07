@@ -2,13 +2,14 @@ package com._520.myblog.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 
 /**
  *  用户
  */
 @Data
-public class User {
+public class User implements Serializable {
 
     private Long id;
     // 昵称

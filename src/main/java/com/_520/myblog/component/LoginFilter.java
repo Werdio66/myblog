@@ -24,6 +24,7 @@ public class LoginFilter implements Filter {
         String url = filterConfig.getInitParameter("loginUrl");
 
         exclusionUrlSet.add(noAuthUrl);
+        exclusionUrlSet.add("/");
         exclusionUrlSet.add("/login");
         exclusionUrlSet.add("redirect:/main.html");
         exclusionUrlSet.add("redirect:/admin");

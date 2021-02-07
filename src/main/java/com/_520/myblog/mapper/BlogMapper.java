@@ -4,6 +4,7 @@ import com._520.myblog.entity.Blog;
 import com._520.myblog.po.Condition;
 import org.apache.ibatis.annotations.Param;
 import java.util.List;
+import java.util.Set;
 
 /**
  * (Blog)表数据库访问层
@@ -87,4 +88,6 @@ public interface BlogMapper {
     List<Blog> queryByYear(@Param("year") String year);
 
     int queryCount();
+
+    List<Blog> selectByIds(@Param("ids") Set<Long> ids);
 }

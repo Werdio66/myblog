@@ -2,6 +2,7 @@ package com._520.myblog.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -9,7 +10,7 @@ import java.util.List;
  * 分类
  */
 @Data
-public class Type {
+public class Type implements Serializable {
 
     private Long id;
     // 分类名称

@@ -2,10 +2,9 @@ spring:
   # 国际化
   messages:
     basename: i18n.login
-
   # 数据库连接
   datasource:
-    url: jdbc:mysql://localhost:3306/myblog?useSSL=false&useUnicode=true&characterEncoding=UTF-8&serverTimezone=UTC
+    url: jdbc:mysql://localhost:3306/myblog?serverTimezone=Asia/Shanghai&useSSL=false&useUnicode=true&characterEncoding=UTF-8
     username: root
     password: admin
     driver-class-name: com.mysql.cj.jdbc.Driver
@@ -16,6 +15,9 @@ spring:
   thymeleaf:
     # 不缓存，直接加载
     cache: false
+  redis:
+    port: 6379
+    host: 192.168.47.66
 mybatis:
   # 配置 mapper 文件的目录
   mapper-locations: classpath:mappers/*Mapper.xml
@@ -31,3 +33,5 @@ user:
   content: 李四,一个独立开发者，折腾在 0 和 1 世界的大叔；一个终身学习者，誓将学习无限循环. 希望结识可以共同成长的小伙伴.
   tagList: ddd
   languageList: java
+server:
+  address: 0.0.0.0

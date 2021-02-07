@@ -125,11 +125,12 @@ public class CommentServiceImpl implements CommentService {
             if (comment.getParentId() != -1){
                 // 取出当前评论的父评论
                 Comment parent = map.get(comment.getParentId());
-                // 将当前评论加到父评论的子评论中
+                // 父评论有可能不是根结点，所以从所有的评论中取获取
                 if (parent == null){
                     parent = allComms.get(comment.getParentId());
                 }
-                 parent.getChildComments().add(comment);
+                // 将当前评论加到父评论的子评论中
+                parent.getChildComments().add(comment);
                 // 为当前评论设置父评论
                 comment.setParentName(parent.getNickName());
             }

@@ -3,10 +3,12 @@ package com._520.myblog.service.impl;
 import com._520.myblog.entity.Blog;
 import com._520.myblog.mapper.BlogMapper;
 import com._520.myblog.po.Condition;
+import com._520.myblog.redis.BlogCache;
 import com._520.myblog.service.BlogService;
 import com._520.myblog.utils.MarkdownUtils;
 import com.github.pagehelper.PageInfo;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.annotation.ReadOnlyProperty;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
@@ -28,10 +30,14 @@ import java.util.concurrent.atomic.AtomicInteger;
  * @since 2020-02-15 12:24:43
  */
 @Slf4j
-@Service("blogService")
+@Service
 public class BlogServiceImpl implements BlogService {
+
     @Resource
     private BlogMapper blogMapper;
+
+    @Autowired
+    private BlogCache blogCache;
 
     /**
      * 通过ID查询单条数据
@@ -52,10 +58,12 @@ public class BlogServiceImpl implements BlogService {
         // 将文本内容转换为前端页面显示
         String content = MarkdownUtils.markdownToHtmlExtensions(blog.getContent());
         blog.setContent(content);
+
         Integer viewsCount = blog.getViewsCount();
         AtomicInteger atomicInteger = new AtomicInteger(viewsCount);
         blog.setViewsCount(atomicInteger.incrementAndGet());
-
+        // 将 redis 中的数量加一
+        blogCache.zsetIncr(blog.getId());
         blogMapper.update(blog);
 
         return blog;
@@ -99,8 +107,9 @@ public class BlogServiceImpl implements BlogService {
         blog.setCreatTime(localDate);
         blog.setUpdateTime(localDate);
         this.blogMapper.insert(blog);
-
         Long blogId = blogMapper.getIdByTitle(blog.getTitle());
+        // 记录推荐
+        blogCache.zsetAddBlog(blogId);
 
         // 维护中间表
         for (Long tagId : tagIds){
@@ -193,5 +202,10 @@ public class BlogServiceImpl implements BlogService {
     @Override
     public int queryCount() {
         return blogMapper.queryCount();
+    }
+
+    @Override
+    public List<Blog> selectByIds(Set<Long> ids) {
+        return blogMapper.selectByIds(ids);
     }
 }

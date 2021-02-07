@@ -2,6 +2,7 @@ package com._520.myblog.entity;
 
 import lombok.Data;
 
+import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
@@ -11,7 +12,7 @@ import java.util.List;
  * 评论
  */
 @Data
-public class Comment {
+public class Comment implements Serializable {
 
     private Long id;
     // 发表评论的人的昵称

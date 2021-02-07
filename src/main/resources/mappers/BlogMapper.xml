@@ -160,6 +160,16 @@
     <select id="getIdByTitle" resultType="Long">
         select id from blog where title = #{title}
     </select>
+    <select id="selectByIds" resultMap="BlogMap">
+        select id, title from blog where id in
+        <foreach collection="ids" open="(" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+        order by field (id,
+        <foreach collection="ids" open="" close=")" separator="," item="id">
+            #{id}
+        </foreach>
+    </select>
 
     <insert id="protectBlogAndTags">
         insert into blog_tag(blog_id, tag_id) values (#{blogId}, #{tagId})

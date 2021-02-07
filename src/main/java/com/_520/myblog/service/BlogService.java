@@ -6,6 +6,7 @@ import com.github.pagehelper.PageInfo;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * (Blog)表服务接口
@@ -99,4 +100,6 @@ public interface BlogService {
      *  查询博客数量
      */
     int queryCount();
+
+    List<Blog> selectByIds(Set<Long> ids);
 }
